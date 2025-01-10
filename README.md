@@ -46,44 +46,44 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4ifQ.
 
 ```bash
 python3 jwt_tool.py parse --jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-
+```
 	•	打印 Header、Payload、Signature 以及所使用的算法
 	•	若加上 --human-time 参数，还能将 iat/exp/nbf 等时间戳转成人类可读格式
 <img width="566" alt="image" src="https://github.com/user-attachments/assets/6249401a-5ac4-4ceb-a7cb-ca5a955707e4" />
 
 2. 转换为 John the Ripper 哈希格式
-
+```bash
 python3 jwt_tool.py tojohn --jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-
+```
 	•	输出形如 header.payload#signature_hex 的格式，方便与字典破解工具结合使用
 
 3. 重新签名
-
+```bash
 python3 jwt_tool.py resign \
     --jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
     --secret "mysecret" \
     --alg HS256 \
     --payload-update '{"role":"guest","iat":1690000000}'
-
+```
 	•	将原有 JWT 中的 role 改为 guest，并更新 iat，然后使用 mysecret 作为密钥以 HS256 算法生成新的 JWT
 
 4. 弱密钥爆破
-
+```bash
 python3 jwt_tool.py bruteforce \
     --jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
     --wordlist "/path/to/common_secrets.txt" \
     --alg HS256
-
+```
 	•	利用常见弱密钥字典爆破 JWT，若签名匹配则会显示对应密钥
 
 5. 模糊测试 (Fuzz)
-
+```bash
 python3 jwt_tool.py fuzz \
     --jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
     --secret "mysecret" \
     --alg HS256 \
     --rounds 10
-
+```
 	•	随机插值或修改 Payload 中字段，输出模糊后的 JWT 用于测试后端的健壮性
 
 应用场景
